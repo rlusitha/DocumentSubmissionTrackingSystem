@@ -13,7 +13,7 @@
     <div class="container">
         <h1 class="display-4">Applicant Registration Form</h1>
         <br>
-        <form method="post" action="{{ route('applicants.store') }}"  class="row g-3">
+        <form method="post" action="/registerApplicant"  class="row g-3">
             @csrf
             <div class="col-md-12">
                 <label for="full_name" class="form-label">Full Name</label>

@@ -30,7 +30,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('applications', ApplicationController::class);
-Route::resource('applicants', ApplicantController::class);
+Route::view('/searchApplicant', './Applicant/applicant_search');
+Route::view('/registerApplicant', './Applicant/applicant-registration');
+Route::post('/get_applicant', [ApplicantController::class, 'searchApplicant']);
+
+Route::view('/viewRegisterApplication', './Application/application-registration');
+Route::post('/registerApplication', [ApplicationController::class, 'registerApplication']);
 
 require __DIR__.'/auth.php';

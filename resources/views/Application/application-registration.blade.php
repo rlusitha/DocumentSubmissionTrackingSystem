@@ -13,12 +13,8 @@
     <div class="container">
         <h1 class="display-4">Application Registration Form</h1>
         <br>
-        <form method="post" action="{{ route('applications.store') }}" class="row g-3" enctype="multipart/form-data">
+        <form method="post" action="/registerApplication" class="row g-3" enctype="multipart/form-data">
             @csrf
-            <div class="col-md-12">
-                <label for="application_no" class="form-label">Application Number</label>
-                <input type="text" class="form-control" id="application_no" name="application_no">
-            </div>
             <div class="col-md-12">
                 <label for="applicant_name" class="form-label">Applicant Name</label>
                 <input type="text" class="form-control" id="applicant_name" name="applicant_name">
