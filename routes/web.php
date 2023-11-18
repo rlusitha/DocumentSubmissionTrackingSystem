@@ -36,5 +36,6 @@ Route::post('/get_applicant', [ApplicantController::class, 'searchApplicant']);
 
 Route::view('/viewRegisterApplication', './Application/application-registration');
 Route::post('/registerApplication', [ApplicationController::class, 'registerApplication']);
+Route::get('/stream_document', [ApplicationController::class, 'stramDocument']);
 
 require __DIR__.'/auth.php';

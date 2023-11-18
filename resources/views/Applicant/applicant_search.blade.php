@@ -28,15 +28,30 @@
                     <input type="text" id="nic" class="form-control" name="nic">
                 </div>
                 <div class="col-auto">
-                    <!-- <span id="passwordHelpInline" class="form-text">
-                    Must be 8-20 characters long.
-                </span> -->
                     <button id="nic_submit" class="btn btn-primary" type="submit">Search</button>
+                    <button id="nic_reset" class="btn btn-secondary" type="reset">Clear</button>
                 </div>
             </div>
         </form>
         <br>
-        <p id="message"></p>
+
+        <p id="message" style="color: red;"></p>
+
+        <table id="applicationTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Application Id</th>
+                    <th scope="col">NIC</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Disease</th>
+                    <th scope="col">Documents</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
     <!-- Optional JavaScript; choose one of the two! -->
 
@@ -50,7 +65,7 @@
     -->
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#nic_form").on('submit', function(e){
+            $("#nic_form").on('submit', function(e) {
                 e.preventDefault();
 
                 let form_data = $(this).serializeArray();
@@ -61,12 +76,82 @@
                     data: form_data,
                     method: "POST",
                     dataType: "json",
-                    error: function (e){
+                    error: function(e) {
                         console.log("error");
                     },
-                    success: function (r){
+                    success: function(r) {
                         $('#message').empty();
-                        $('#message').append(r.nic);
+                        $('#applicationTable tbody').empty();
+
+                        if (r.applications[0] == null) {
+                            $('#message').append("No records were found!");
+                        } else {
+
+                            var responseData = r;
+
+                            // Function to populate the table
+                            function populateTable(data) {
+                                var tableBody = $('#applicationTable tbody');
+
+                                // Clear existing rows
+                                tableBody.empty();
+
+                                // Loop through each application in the response
+                                $.each(data.applications, function(index, application) {
+                                    // Split the path string into an array of paths
+                                    var paths = application.path.split(',');
+
+                                    var originalNames = application.original_name.split(',');
+
+                                    // Create a row for each application
+                                    var row = '<tr>' +
+                                        '<td>' + application.id + '</td>' +
+                                        '<td>' + application.nic + '</td>' +
+                                        '<td>' + application.full_name + '</td>' +
+                                        '<td>' + /* Add disease information here */ +'</td>' +
+                                        '<td>';
+
+                                    // Add links for each document path
+                                    $.each(paths, function(index, path) {
+                                        row += '<a href="' + path + '" class="pdf-link" data-value"' + path + '" target="_blank">' + originalNames[index] + '</a><br>';
+                                    });
+
+                                    row += '</td>' +
+                                        '<td><button class="btn btn-primary">Add Documents</button></td>' +
+                                        '</tr>';
+
+                                    // Append the row to the table body
+                                    tableBody.append(row);
+                                });
+                            }
+                            // Call the function to populate the table with the provided data
+                            populateTable(responseData);
+                        }
+                    }
+                });
+            });
+
+            //Clear the paragraph tag and the table body when click the reset button
+            $('#nic_reset').on('click', function(e) {
+                $('#message').empty();
+                $('#applicationTable tbody').empty();
+            });
+
+            $(document).on('click', '.pdf-link', function(e) {
+                e.preventDefault();
+
+                var link = $(this).attr('href');
+
+                $.ajax({
+                    url: '/stream_document',
+                    data: {
+                        'data': link
+                    },
+                    error: function(e) {
+                        console.log("error");
+                    },
+                    success: function(r) {
+                        console.log(r)
                     }
                 });
             });
