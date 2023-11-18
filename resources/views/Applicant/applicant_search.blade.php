@@ -151,9 +151,34 @@
                         console.log("error");
                     },
                     success: function(r) {
-                        console.log(r)
+                        var pdfData = r.data;
+
+                        displayPdfContent(pdfData);
                     }
                 });
+
+                function displayPdfContent(base64Content) {
+                    // Decode the base64-encoded content
+                    var binaryContent = atob(base64Content);
+
+                    // Create a Uint8Array from the binary content
+                    var arrayBuffer = new ArrayBuffer(binaryContent.length);
+                    var uint8Array = new Uint8Array(arrayBuffer);
+                    for (var i = 0; i < binaryContent.length; i++) {
+                        uint8Array[i] = binaryContent.charCodeAt(i);
+                    }
+
+                    // Create a Blob from the Uint8Array
+                    var blob = new Blob([uint8Array], {
+                        type: 'application/pdf'
+                    });
+
+                    // Create a blob URL representing the PDF content
+                    var url = URL.createObjectURL(blob);
+
+                    // Open the PDF in a new browser tab
+                    window.open(url, '_blank');
+                }
             });
         });
     </script>

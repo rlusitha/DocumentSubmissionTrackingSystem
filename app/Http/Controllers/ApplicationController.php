@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -77,11 +76,11 @@ class ApplicationController extends Controller
     public function stramDocument(Request $request)
     {
         $link = $request->input('data');
-        // dd(storage_path());
-        // $contents = Storage::get($link);
-        // return response()->Storage::download($link);
-        // return response($contents)->header('Content-Type', 'application/pdf');  
-        // return Pdf::loadFile(storage_path().'\app\docs\mother_pawning_clearens_letter_for_NSB.pdf')->stream();
-        return "Hey";
+
+        $filePath = storage_path('app/public/' . $link);
+        $pdfContent = file_get_contents($filePath);
+        $base64Content = base64_encode($pdfContent);
+
+        return response()->json(['data' => $base64Content]);
     }
 }
