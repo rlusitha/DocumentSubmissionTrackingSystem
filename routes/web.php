@@ -38,4 +38,7 @@ Route::view('/viewRegisterApplication', './Application/application-registration'
 Route::post('/registerApplication', [ApplicationController::class, 'registerApplication']);
 Route::get('/stream_document', [ApplicationController::class, 'stramDocument']);
 
+Route::get('/view_application', [ApplicationController::class, 'viewApplication']);
+Route::view('/updateApplication', './Application/update_application');
+
 require __DIR__.'/auth.php';

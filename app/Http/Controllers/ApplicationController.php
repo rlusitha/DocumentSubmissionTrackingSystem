@@ -83,4 +83,26 @@ class ApplicationController extends Controller
 
         return response()->json(['data' => $base64Content]);
     }
+
+    public function viewApplication(Request $request)
+    {
+        $application_id = $request->input('application_id');
+
+        $application_details = DB::select("SELECT
+        applicants.full_name,
+        applicants.nic,
+        applications_header.id,
+        applications_header.application_date,
+        documents.original_name,
+        documents.path
+        FROM
+        applications_header
+        INNER JOIN applications_details ON applications_header.id = applications_details.applications_header_id
+        INNER JOIN applicants ON applicants.id = applications_details.applicant_id
+        INNER JOIN documents ON documents.id = applications_details.document_id
+        WHERE
+        applications_header.id = $application_id");
+
+        return response()->json(['application_details' => $application_details]);
+    }
 }

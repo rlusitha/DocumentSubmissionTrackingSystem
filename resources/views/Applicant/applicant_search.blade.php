@@ -117,7 +117,7 @@
                                     });
 
                                     row += '</td>' +
-                                        '<td><button class="btn btn-primary">Add Documents</button></td>' +
+                                        '<td><button class="btn btn-primary add_doc" value="' + application.id + '">Add Documents</button></td>' +
                                         '</tr>';
 
                                     // Append the row to the table body
@@ -179,6 +179,25 @@
                     // Open the PDF in a new browser tab
                     window.open(url, '_blank');
                 }
+            });
+
+            $(document).on('click', '.add_doc', function(e) {
+                var button_value = $(this).val();
+
+                $.ajax({
+                    url: '/view_application',
+                    data: {
+                        'application_id': button_value
+                    },
+                    error: function(e) {
+                        console.log("error");
+                    },
+                    success: function(r) {
+                        var application_details = r.application_details;
+
+                        window.location.href = redirectUrl;
+                    }
+                });
             });
         });
     </script>
