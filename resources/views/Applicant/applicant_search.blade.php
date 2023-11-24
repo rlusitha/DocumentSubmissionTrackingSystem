@@ -193,9 +193,32 @@
                         console.log("error");
                     },
                     success: function(r) {
-                        var application_details = r.application_details;
+                        var application_details = r.application_details[0];
 
-                        window.location.href = redirectUrl;
+                        var url = '/updateApplication/' + application_details.id;
+
+                        var newTab = window.open(url);
+
+                        newTab.onload = function() {
+                            $('#applicant_name', newTab.document).val(application_details.full_name);
+                            $('#applicant_nic', newTab.document).val(application_details.nic);
+                            $('#application_date', newTab.document).val(application_details.application_date);
+
+                            // Split the original_name into an array of values
+                            var originalNames = application_details.original_name.split(',');
+
+                            // Get the element to display file names
+                            var fileNamesDisplay = $('#file-name-display', newTab.document);
+
+                            // Clear existing content
+                            fileNamesDisplay.empty();
+
+                            // Display each original name on a new line
+                            originalNames.forEach(function(originalName) {
+                                var fileNameParagraph = $('<p>').text(originalName);
+                                fileNamesDisplay.append(fileNameParagraph);
+                            });
+                        };
                     }
                 });
             });
